@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+    <style type="text/css">
+        canvas{
+            background-color: gray;
+        }
+    </style>
+    
+</head>
+<body>
+    <canvas id="my_canvas" width="500" height="500"></canvas>
+    <script type="text/javascript">
+    const my_canvas=document.getElementById('my_canvas')
+    const ctx =my_canvas.getContext('2d')
+
+    ctx.fillStyle="blue"
+    ctx.fillRect(100,100,100,100)
+
+    ctx.fillStyle="red"
+    ctx.fillRect(180,180,100,100)
+
+
+    ctx.fillStyle="green"
+    ctx.fillRect(260,260,100,100)
+
+
+    </script>
+</body>
+</html>
