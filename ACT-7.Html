@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+    <style type="text/css">
+        canvas{
+            background-color: gray;
+        }
+    </style>
+    
+</head>
+<body>
+    <canvas id="my_canvas" width="500" height="500"></canvas>
+    <script type="text/javascript">
+    const my_canvas=document.getElementById('my_canvas')
+    const ctx =my_canvas.getContext('2d')
+
+    ctx.strokeRect(20,20,100,100)
+
+    ctx.fillStyle="blue"
+    ctx.fillRect(100,100,100,100)
+
+    ctx.fillStyle="red"
+    ctx.fillRect(180,180,100,100)
+
+
+    ctx.fillStyle="green"
+    ctx.fillRect(260,260,100,100)
+
+    ctx.lineWitdh=4;
+    ctx.strokeStyle="red"
+    ctx.strokeRect(340,340,100,100)
+
+    ctx.beginPath()
+    ctx.moveTo(400,100);
+    ctx.lineTo(400,200);
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(170,400);
+    ctx.lineTo(60,500);
+    ctx.lineTo(300,450);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(275, 120, 50, 0, Math.PI * 2, false);
+    ctx.fillStyle = "green";
+    ctx.fill();
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.strokeStyle = "purple";
+    ctx.arc(280, 120, 30, 0, Math.PI );
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(500, 150);
+    ctx.lineTo(700, 300);
+    ctx.stroke();
+    ctx.font = "48px serif";
+        ctx.lineWidth = 2;
+
+        
+    ctx.fillStyle = "green";
+    ctx.fillText("Hola mundo", 50, 50);
+
+        
+    ctx.strokeStyle = "white";
+    ctx.strokeText("Hola mundo", 50, 50);
+
+    const gradient = ctx.createLinearGradient(240, 100, 340, 350);
+        gradient.addColorStop(0, 'red');
+        gradient.addColorStop(0.5, 'magenta');
+        gradient.addColorStop(1, 'lime');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(50, 260, 250, 50);
+
+    </script>
+</body>
+</html>
