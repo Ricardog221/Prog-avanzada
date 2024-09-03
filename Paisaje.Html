@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #E0E0E0;
+        }
+        canvas {
+            background-color: #B0B0B0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="landscapeCanvas" width="800" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById('landscapeCanvas');
+        const ctx = canvas.getContext('2d');
+
+       
+        const skyGradient = ctx.createLinearGradient(0, 0, 0, 250);
+        skyGradient.addColorStop(0, "#00004d");
+        skyGradient.addColorStop(1, "#000000");
+        ctx.fillStyle = skyGradient;
+        ctx.fillRect(0, 0, canvas.width, 250);
+
+        // Suelo
+        ctx.fillStyle = "#C0C0C0";
+        ctx.fillRect(0, 400, canvas.width, 100);
+
+        
+        ctx.beginPath();
+        ctx.moveTo(100, 400);
+        ctx.lineTo(300, 200);
+        ctx.lineTo(500, 400);
+        ctx.closePath();
+        ctx.fillStyle = "#3b2f63";
+        ctx.fill();
+
+       
+        ctx.beginPath();
+        ctx.moveTo(250, 400);
+        ctx.lineTo(400, 150);
+        ctx.lineTo(550, 400);
+        ctx.closePath();
+        ctx.fillStyle = "#6a5acd";
+        ctx.fill();
+
+        
+        ctx.beginPath();
+        ctx.moveTo(450, 400);
+        ctx.lineTo(650, 200);
+        ctx.lineTo(850, 400);
+        ctx.closePath();
+        ctx.fillStyle = "#8470ff";
+        ctx.fill();
+
+        
+        ctx.fillStyle = "#708090";
+        ctx.beginPath();
+        ctx.moveTo(50, 400);
+        ctx.lineTo(150, 350);
+        ctx.lineTo(250, 400);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(600, 400);
+        ctx.lineTo(700, 350);
+        ctx.lineTo(800, 400);
+        ctx.closePath();
+        ctx.fill();
+
+    
+        ctx.beginPath();
+        ctx.arc(650, 100, 50, 0, Math.PI * 2, false);
+        ctx.fillStyle = "#b0c4de";
+        ctx.fill();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = "#708090";
+        ctx.stroke();
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="512" height="440"></canvas>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Fondo
+        ctx.fillStyle = "#0000AA";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        
+        function drawPalmTree(x, y) {
+            // Tronco 
+            ctx.fillStyle = "#8B4513";
+            ctx.fillRect(x, y, 20, 220); 
+
+            // Hojas 
+            ctx.beginPath();
+            ctx.fillStyle = "#00FF00";
+            ctx.moveTo(x + 10, y); 
+            ctx.lineTo(x - 50, y - 50); 
+            ctx.lineTo(x + 70, y - 50); 
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(x + 10, y); 
+            ctx.lineTo(x - 70, y - 10); 
+            ctx.lineTo(x + 90, y - 10); 
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(x + 10, y); 
+            ctx.lineTo(x - 30, y - 30); 
+            ctx.lineTo(x + 50, y - 30); 
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        //palmeras
+        drawPalmTree(100, 80);
+
+        
+        drawPalmTree(350, 80);
+
+        // suelo
+        ctx.fillStyle = "#228B22";
+        ctx.fillRect(0, 300, canvas.width, 20);
+        ctx.fillStyle = "#00FF00";
+        ctx.fillRect(0, 320, canvas.width, 40);
+
+        // patrón 
+        ctx.fillStyle = "#8B4513";
+        for (let i = 0; i < canvas.width; i += 40) {
+            for (let j = 360; j < 440; j += 40) {
+                ctx.fillRect(i, j, 20, 20);
+                ctx.fillRect(i + 20, j + 20, 20, 20);
+            }
+        }
+        ctx.fillStyle = "#AA5500";
+        for (let i = 0; i < canvas.width; i += 40) {
+            for (let j = 360; j < 440; j += 40) {
+                ctx.fillRect(i + 20, j, 20, 20);
+                ctx.fillRect(i, j + 20, 20, 20);
+            }
+        }
+
+        // Aros dorados
+        ctx.strokeStyle = "#FFFF00";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(150, 270, 20, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(220, 270, 20, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(290, 270, 20, 0, Math.PI * 2);
+        ctx.stroke();
+
+        //Flor
+        ctx.fillStyle = "#FFFF00";
+        ctx.beginPath();
+        ctx.arc(440, 250, 40, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#006400";
+        ctx.beginPath();
+        ctx.arc(440, 250, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillRect(430, 290, 20, 50);
+    </script>
+</body>
+</html>
+
