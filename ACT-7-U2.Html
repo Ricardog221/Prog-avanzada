@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Registro</title>
+    <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+
+      #app {
+        padding: 20px;
+        max-width: 300px;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      input[type="number"],
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        font-size: 14px;
+      }
+
+      button {
+        width: 100%;
+        padding: 8px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div>
+        <input type="number" v-model="num1" placeholder="Número 1">
+        <input type="number" v-model="num2" placeholder="Número 2">
+        <p>Resultado: {{ num1 + num2 }}</p>
+      </div>
+
+    
+      <div>
+        <button @click="incrementarContador">Presiona para incrementar</button>
+        <p>Veces presionadas: {{ contador }}</p>
+      </div>
+
+      
+      <div>
+        <input type="text" v-model="nombre" placeholder="Tu nombre">
+        <input type="text" v-model="apellidos" placeholder="Tus apellidos">
+        <button @click="agregarRegistro">Agregar registro</button>
+      </div>
+
+      <div v-if="registros.length > 0">
+        <h3>Registros</h3>
+        <ul>
+          <li v-for="(registro, index) in registros" :key="index">
+            {{ registro.nombre }} {{ registro.apellidos }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            num1: 0,
+            num2: 0,
+            nombre: '',
+            apellidos: '',
+            contador: 0,
+            registros: []
+          };
+        },
+        methods: {
+          incrementarContador() {
+            this.contador++;
+          },
+          agregarRegistro() {
+            if (this.nombre && this.apellidos) {
+              this.registros.push({ nombre: this.nombre, apellidos: this.apellidos });
+              this.nombre = '';  
+              this.apellidos = '';
+            }
+          }
+        }
+      });
+
+      app.mount('#app');
+    </script>
+  </body>
+</html>
