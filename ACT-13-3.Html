@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuarios</title>
+  <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #094754;
+    }
+
+    button {
+      padding: 5px 10px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    .form-container {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 5px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="crud-app">
+  <h1>Lista de Usuarios</h1>
+  <div class="form-container">
+    <h3>{{ editIndex !== null ? "Editar Usuario" : "Agregar Usuario" }}</h3>
+    <form @submit.prevent="saveUser">
+      <input v-model="form.name" placeholder="Name" required>
+      <input v-model="form.email" placeholder="Email" required>
+      <input v-model="form.phone" placeholder="Phone" required>
+      <input v-model="form.username" placeholder="UserName" required>
+      <button type="submit">{{ editIndex !== null ? "Actualizar" : "Agregar" }}</button>
+      <button type="button" @click="resetForm">Cancelar</button>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>UserName</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(user, index) in users" :key="index">
+        <td>{{ index + 1 }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.username }}</td>
+        <td>
+          <button @click="editUser(index)">Edit</button>
+          <button @click="deleteUser(index)">Remove</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const app = Vue.createApp({
+  data() {
+    return {
+      users: [],  // Lista de usuarios
+      form: {     // Datos del formulario
+        name: '',
+        email: '',
+        phone: '',
+        username: ''
+      },
+      editIndex: null  
+    };
+  },
+  methods: {
+    loadUsers() {
+     
+    },
+    saveUser() {
+      if (this.editIndex === null) {
+        // Agregar un nuevo usuario
+        this.users.push({ ...this.form });
+      } else {
+        this.users[this.editIndex] = { ...this.form };
+      }
+      this.resetForm();
+    },
+    editUser(index) {
+      this.form = { ...this.users[index] };
+      this.editIndex = index;
+    },
+    deleteUser(index) {
+      this.users.splice(index, 1);
+    },
+    // Reiniciar formulario
+    resetForm() {
+      this.form = { name: '', password: '', email: '', phone: '',username: '' };
+      this.editIndex = null;
+    }
+  },
+  mounted() {
+    this.loadUsers();
+  }
+});
+
+app.mount('#crud-app');
+</script>
+
+</body>
+</html>
+
