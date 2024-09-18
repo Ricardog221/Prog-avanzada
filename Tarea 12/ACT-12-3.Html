@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login con Vue y JSON</title>
+    <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #282c34;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+      }
+
+      #login-app {
+        background-color: #1c1f26;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        font-size: 1.8rem;
+        color: #61dafb;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #333;
+        color: #fff;
+        font-size: 14px;
+      }
+
+      input::placeholder {
+        color: #bbb;
+      }
+
+      button {
+        width: 100%;
+        padding: 15px;
+        background-color: #61dafb;
+        color: #282c34;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #21a1f1;
+      }
+
+      .message {
+        margin-top: 20px;
+        font-size: 14px;
+      }
+
+      .error {
+        color: #ff4c4c;
+      }
+
+      .success {
+        color: #4caf50;
+      }
+
+      table {
+        width: 100%;
+        margin-top: 30px;
+        border-collapse: collapse;
+        background-color: #333;
+        color: #fff;
+      }
+
+      th, td {
+        padding: 15px;
+        border: 1px solid #444;
+      }
+
+      th {
+        background-color: #444;
+      }
+      
+      td {
+        text-align: left;
+      }
+
+    </style>
+</head>
+<body>
+  <div id="login-app">
+    <h1>Iniciar Sesión</h1>
+    
+    <!-- Formulario de inicio de sesión -->
+    <div v-if="!loggedIn">
+      <form @submit.prevent="attemptLogin">
+        <input type="text" v-model="credentials.username" placeholder="Nombre de usuario" required>
+        <input type="password" v-model="credentials.password" placeholder="Contraseña" required>
+        <button type="submit">Acceder</button>
+      </form>
+    </div>
+
+    <!-- Mensaje de error/éxito -->
+    <div v-if="message" class="message" :class="messageType">
+      {{ message }}
+    </div>
+
+    <!-- Tabla de usuarios si la sesión es correcta -->
+    <div v-if="loggedIn">
+      <h2>Usuarios Registrados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Correo Electrónico</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in userList" :key="user.username">
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const loginApp = Vue.createApp({
+      data() {
+        return {
+          credentials: {
+            username: '',
+            password: ''
+          },
+          loggedIn: false,
+          message: '',
+          messageType: '',
+          userList: []
+        };
+      },
+      methods: {
+        async attemptLogin() {
+          try {
+            const response = await fetch('users.json');
+            const users = await response.json();
+
+            const validUser = users.find(user => 
+              user.username === this.credentials.username && user.password === this.credentials.password
+            );
+
+            if (validUser) {
+              this.message = `Bienvenido, ${validUser.username}!`;
+              this.messageType = 'success';
+              this.loggedIn = true;
+              sessionStorage.setItem('activeUser', validUser.username);
+              this.userList = users;
+            } else {
+              this.message = 'Nombre de usuario o contraseña incorrectos.';
+              this.messageType = 'error';
+            }
+          } catch (error) {
+            console.error('Error al procesar JSON', error);
+            this.message = 'Error al procesar los datos, intente más tarde.';
+            this.messageType = 'error';
+          }
+        }
+      },
+      mounted() {
+        const storedUser = sessionStorage.getItem('activeUser');
+        if (storedUser) {
+          this.loggedIn = true;
+          this.message = `Bienvenido nuevamente, ${storedUser}!`;
+          this.messageType = 'success';
+
+          fetch('users.json')
+            .then(response => response.json())
+            .then(data => {
+              this.userList = data;
+            })
+            .catch(error => console.error('Error al cargar usuarios', error));
+        }
+      }
+    });
+
+    loginApp.mount('#login-app');
+  </script>
+</body>
+</html>
