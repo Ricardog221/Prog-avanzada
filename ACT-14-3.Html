@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuarios</title>
+  <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #094754;
+      color: white;
+    }
+
+    button {
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    .form-container {
+      margin-bottom: 20px;
+    }
+
+    input {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="crud-app">
+  <h1>Lista de Usuarios</h1>
+  
+  <!-- Formulario -->
+  <div class="form-container">
+    <h3>{{ editIndex !== null ? "Editar Usuario" : "Agregar Usuario" }}</h3>
+    <form @submit.prevent="saveUser">
+      <input v-model="form.name" placeholder="Nombre" required>
+      <input v-model="form.email" placeholder="Email" required>
+      <input v-model="form.phone" placeholder="Teléfono" required>
+      <input v-model="form.username" placeholder="Usuario" required>
+      <button type="submit">{{ editIndex !== null ? "Actualizar" : "Agregar" }}</button>
+      <button type="button" @click="resetForm">Cancelar</button>
+    </form>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Usuario</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(user, index) in users" :key="index">
+        <td>{{ index + 1 }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.username }}</td>
+        <td>
+          <button @click="editUser(index)">Editar</button>
+          <button @click="deleteUser(index)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+        users: [], // arreglo donde se guardan los usuarios
+        form: {    // datos del formulario
+          name: '',
+          email: '',
+          phone: '',
+          username: ''
+        },
+        editIndex: null // para saber si estamos editando o no
+      };
+    },
+    methods: {
+      // función para guardar el usuario
+      saveUser() {
+        if (this.editIndex === null) {
+          // Si no estamos editando, lo agregamos con push
+          this.users.push({
+            name: this.form.name,
+            email: this.form.email,
+            phone: this.form.phone,
+            username: this.form.username
+          });
+        } else {
+          // Si estamos editando, actualizamos el usuario
+          this.users[this.editIndex].name = this.form.name;
+          this.users[this.editIndex].email = this.form.email;
+          this.users[this.editIndex].phone = this.form.phone;
+          this.users[this.editIndex].username = this.form.username;
+        }
+        this.resetForm(); // Reiniciar el formulario después de guardar
+      },
+      // función para editar un usuario
+      editUser(index) {
+        this.form.name = this.users[index].name;
+        this.form.email = this.users[index].email;
+        this.form.phone = this.users[index].phone;
+        this.form.username = this.users[index].username;
+        this.editIndex = index;
+      },
+      // función para eliminar un usuario
+      deleteUser(index) {
+        this.users.splice(index, 1);
+      },
+      // función para reiniciar el formulario
+      resetForm() {
+        this.form.name = '';
+        this.form.email = '';
+        this.form.phone = '';
+        this.form.username = '';
+        this.editIndex = null;
+      }
+    }
+  });
+
+  app.mount('#crud-app');
+</script>
+
+</body>
+</html>
