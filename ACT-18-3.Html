@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMDB Peli App</title>
+    <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input {
+            width: 250px;
+        }
+
+        button {
+            background-color: #094754;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #076c87;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #094754;
+            color: white;
+        }
+
+        .movie-list {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .movie-details {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-details h2 {
+            color: #094754;
+        }
+
+        .rate-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <h1>TMDB Peli App</h1>
+
+    <div v-if="!loggedIn" class="login-container">
+        <div>
+            <h2>Login</h2>
+            <input v-model="username" type="text" placeholder="Username">
+            <input v-model="password" type="password" placeholder="Password">
+            <button @click="login">Login</button>
+        </div>
+    </div>
+
+    <div v-if="loggedIn" class="movie-list">
+        <h2>Listado de Películas</h2>
+        <button @click="fetchMovies">Obtener Películas</button>
+
+        <table v-if="movies.length > 0">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Resumen</th>
+                    <th>Detalles</th>
+                    <th>Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="movie in movies" :key="movie.id">
+                    <td>{{ movie.title }}</td>
+                    <td>{{ movie.overview }}</td>
+                    <td><button @click="getMovieDetails(movie.id)">Ver Detalles</button></td>
+                    <td>
+                        <input v-model.number="movie.rating" type="number" min="1" max="10" placeholder="Rate">
+                        <div class="rate-buttons">
+                            <button @click="rateMovie(movie.id, movie.rating)">Rate</button>
+                            <button @click="deleteRate(movie.id)">Eliminar Rate</button>
+                        </div>
+                        <p v-if="movie.user_rating">Calificación: {{ movie.user_rating }}</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Detalles peli (se muestran hasta abajo de la pagina al dar click en Ver detalles) -->
+        <div v-if="movieDetails" class="movie-details">
+            <h2>Detalles de la Película</h2>
+            <p><strong>Título:</strong> {{ movieDetails.title }}</p>
+            <p><strong>Resumen:</strong> {{ movieDetails.overview }}</p>
+            <p><strong>Fecha de lanzamiento:</strong> {{ movieDetails.release_date }}</p>
+            <p><strong>Puntuación:</strong> {{ movieDetails.vote_average }}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const app = Vue.createApp({
+    data() {
+        return {
+            apiKey: 'a5a0dbfb3a9d9dee03e93d74393b2931', 
+            sessionId: null,
+            username: '',
+            password: '',
+            loggedIn: false,
+            movies: [],
+            movieDetails: null
+        };
+    },
+    methods: {
+        async login() {
+            try {
+                // Obtener un request token
+                let res = await fetch(`https://api.themoviedb.org/3/authentication/token/new?api_key=${this.apiKey}`);
+                let data = await res.json();
+                const requestToken = data.request_token;
+
+                // Validar token con el nombre de usuario y la contraseña
+                res = await fetch(`https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${this.apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: this.username,
+                        password: this.password,
+                        request_token: requestToken
+                    })
+                });
+
+                data = await res.json();
+                if (!data.success) {
+                    alert('Login failed');
+                    return;
+                }
+
+                
+                res = await fetch(`https://api.themoviedb.org/3/authentication/session/new?api_key=${this.apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ request_token: requestToken })
+                });
+
+                data = await res.json();
+                this.sessionId = data.session_id;
+                this.loggedIn = true;
+                alert('Login exitoso');
+            } catch (error) {
+                console.error(error);
+                alert('Error en el Login');
+            }
+        },
+
+        async fetchMovies() {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${this.apiKey}`);
+                const data = await res.json();
+                // Inicializa el campo de rating por cada película
+                this.movies = data.results.map(movie => {
+                    movie.user_rating = null;  // Guardará la calificación del usuario
+                    return movie;
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async getMovieDetails(id) {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${this.apiKey}`);
+                const data = await res.json();
+                this.movieDetails = data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async rateMovie(id, rating) {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/movie/${id}/rating?api_key=${this.apiKey}&session_id=${this.sessionId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: rating })
+                });
+
+                const data = await res.json();
+                if (data.status_code === 1 || data.status_code === 12) {
+                    // Busca la película y actualiza la calificación del usuario
+                    const movie = this.movies.find(m => m.id === id);
+                    if (movie) {
+                        movie.user_rating = rating;
+                    }
+                    alert('Película puntuada correctamente');
+                } else {
+                    alert('Error al puntuar la película');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async deleteRate(id) {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/movie/${id}/rating?api_key=${this.apiKey}&session_id=${this.sessionId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await res.json();
+                if (data.status_code === 13) {
+                    // Actualiza la calificación del usuario a null
+                    const movie = this.movies.find(m => m.id === id);
+                    if (movie) {
+                        movie.user_rating = null;
+                    }
+                    alert('Rate eliminado correctamente');
+                } else {
+                    alert('Error al eliminar el Rate');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+});
+
+app.mount('#app');
+</script>
+
+</body>
+</html>
