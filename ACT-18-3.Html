@@ -55,12 +55,15 @@
             color: white;
         }
 
-        .movie-list {
-            margin-top: 20px;
+        img {
+            width: 100px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
         }
 
-        .hidden {
-            display: none;
+        .movie-list {
+            margin-top: 20px;
         }
 
         .movie-details {
@@ -109,6 +112,7 @@
         <table v-if="movies.length > 0">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Título</th>
                     <th>Resumen</th>
                     <th>Detalles</th>
@@ -117,6 +121,7 @@
             </thead>
             <tbody>
                 <tr v-for="movie in movies" :key="movie.id">
+                    <td><img :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`" alt="Poster"></td>
                     <td>{{ movie.title }}</td>
                     <td>{{ movie.overview }}</td>
                     <td><button @click="getMovieDetails(movie.id)">Ver Detalles</button></td>
@@ -181,7 +186,6 @@ const app = Vue.createApp({
                     return;
                 }
 
-                
                 res = await fetch(`https://api.themoviedb.org/3/authentication/session/new?api_key=${this.apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
