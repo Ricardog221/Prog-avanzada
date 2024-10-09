@@ -1,84 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <title>title</title>
-    <style type="text/css">
-        canvas{
-            background-color: gray;
-        }
-    </style>
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Producto</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    @media (min-width: 768px) {
+      #sidebarMenu { position: fixed; top: 0; bottom: 0; z-index: 100; }
+    }
+  </style>
 </head>
 <body>
-    <canvas id="my_canvas" width="500" height="500"></canvas>
-    <script type="text/javascript">
-    const my_canvas=document.getElementById('my_canvas')
-    const ctx =my_canvas.getContext('2d')
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar scroll</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+        </ul>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search">
+          <button class="btn btn-success" type="submit">Search</button>
+        </form>
+        <div class="dropdown ms-3">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">mdo</button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><a class="dropdown-item" href="#">Log out</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-    ctx.strokeRect(20,20,100,100)
+  <!-- Layout con Sidebar y Contenido Principal -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+        <ul class="nav flex-column nav-pills">
+          <li class="nav-item"><a class="nav-link active text-white" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#">Orders</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#">Products</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#">Customers</a></li>
+        </ul>
+      </nav>
 
-    ctx.fillStyle="blue"
-    ctx.fillRect(100,100,100,100)
+      <!-- Contenido Principal: Detalle del Producto -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Detalle del Producto</h1>
+        </div>
 
-    ctx.fillStyle="red"
-    ctx.fillRect(180,180,100,100)
+        <!-- Carrusel de imágenes del producto -->
+        <div id="productCarousel" class="carousel slide col-md-5" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="https://assets.adidas.com/images/w_600,f_auto,q_auto/3bd1b1aa04c74b7a93c9224faaffff33_9366/Calzado_de_Futbol_Predator_Elite_Lengueta_Plegable_Terreno_Firme_Negro_IE1809_HM1.jpg" class="d-block w-100" alt="Producto 1">
+            </div>
+            <div class="carousel-item">
+              <img src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/33cd6caaf5194a45a15c33eb3132afe3_9366/Calzado_de_Futbol_Predator_Elite_Lengueta_Plegable_Terreno_Firme_Amarillo_IE1812_HM1.jpg" class="d-block w-100" alt="Producto 2">
+            </div>
+            <div class="carousel-item">
+              <img src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/6daf06466be34fc982f1c7e229da4d74_9366/Calzado_de_Futbol_Predator_Elite_Lengueta_Plegable_Terreno_Firme_Rojo_IG1707_HM1.jpg" class="d-block w-100" alt="Producto 3">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
 
+        <!-- Información del producto -->
+        <div class="card mt-4">
+          <div class="card-body">
+            <h5 class="card-title">Calzado de Fútbol Predator Elite</h5>
+            <p class="card-text">Este calzado de fútbol está diseñado para jugadores de alto rendimiento, con una lengüeta plegable y tracción optimizada para terrenos firmes.</p>
+            <h6 class="card-subtitle mb-2 text-muted">$100.00 MXN</h6>
+            <a href="#" class="btn btn-primary">Comprar ahora</a>
+          </div>
+        </div>
 
-    ctx.fillStyle="green"
-    ctx.fillRect(260,260,100,100)
+        <!-- Tabla de información adicional -->
+        <div class="table-responsive mt-4">
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Característica</th>
+                <th>Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Material</td>
+                <td>Tejido sintético de alta calidad</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Tamaño</td>
+                <td>Disponible desde 25 cm hasta 30 cm</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Color</td>
+                <td>Negro, Amarillo, Rojo</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Uso</td>
+                <td>Ideal para fútbol en terrenos firmes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
 
-    ctx.lineWitdh=4;
-    ctx.strokeStyle="red"
-    ctx.strokeRect(340,340,100,100)
-
-    ctx.beginPath()
-    ctx.moveTo(400,100);
-    ctx.lineTo(400,200);
-    ctx.closePath();
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(170,400);
-    ctx.lineTo(60,500);
-    ctx.lineTo(300,450);
-    ctx.closePath();
-    ctx.stroke();
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(275, 120, 50, 0, Math.PI * 2, false);
-    ctx.fillStyle = "green";
-    ctx.fill();
-    ctx.lineWidth = 3;
-
-    ctx.beginPath();
-    ctx.strokeStyle = "purple";
-    ctx.arc(280, 120, 30, 0, Math.PI );
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(500, 150);
-    ctx.lineTo(700, 300);
-    ctx.stroke();
-    ctx.font = "48px serif";
-        ctx.lineWidth = 2;
-
-        
-    ctx.fillStyle = "green";
-    ctx.fillText("Hola mundo", 50, 50);
-
-        
-    ctx.strokeStyle = "white";
-    ctx.strokeText("Hola mundo", 50, 50);
-
-    const gradient = ctx.createLinearGradient(240, 100, 340, 350);
-        gradient.addColorStop(0, 'red');
-        gradient.addColorStop(0.5, 'magenta');
-        gradient.addColorStop(1, 'lime');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(50, 260, 250, 50);
-
-    </script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
