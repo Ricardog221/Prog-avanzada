@@ -1,97 +1,86 @@
-<?php
-session_start();
-?>
 <!doctype html>
-<html lang="en">
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" >
+  </head>
+  <body> 
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login Page</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-    crossorigin="anonymous" />
-  <style>
-    body {
-      background-color: #f8f9fa; 
-    }
-    .card {
-      border: none;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      margin-top: 50px; 
-    }
-    .card-body {
-      padding: 2rem; 
-    }
-    .btn-primary {
-      background-color: #007bff; 
-      border-color: #007bff; 
-    }
-    .form-label {
-      font-weight: bold; 
-    }
-    .background-image {
-      background-image: url('https://us.123rf.com/450wm/manczurov/manczurov1306/manczurov130600022/22676841-fondo-azul-abstracto.jpg');
-      background-size: cover;
-      background-position: center;
-      height: 100%;
-      border-radius: 1rem 0 0 1rem; 
-    }
-  </style>
-</head>
+  	<div class="container ">
+	  
+  		<div class="row mt-5">
 
-<body>
-  <div class="container">
-    <div class="card">
-      <div class="row g-0">
-        <div class="col-md-6 background-image d-none d-md-block">
-        </div>
-        <div class="col">
-          <div class="card-body">
-            <form class="d-flex flex-column" method="POST" action="AuthController.php">
-              <label for="email" class="form-label">Email</label>
-              <input
-                name="email"
-                type="email"
-                class="form-control mb-3"
-                placeholder="Email"
-                aria-label="email" />
-              <div class="text-secondary mb-3">We do not share your email</div>
+  			<!-- espacio -->
+  			<div class="col-1"></div> 
+  			
+  			<div class="col-10 ">
+  				
+  				<div class="row rounded shadow"> 
+  					
+  					<div class="col-md-6 col-xs-12 p-0 d-none d-sm-none d-xs-none d-md-none d-lg-block">
+  						<img src="login_cover.jpg" class="img-fluid rounded">
+  					</div>
+  					
+  					<div class="col p-5">
 
-              <label for="password" class="form-label">Password</label>
-              <input
-                name="password"
-                type="password"
-                class="form-control mb-3"
-                placeholder="Password"
-                aria-label="password" />
-              
-              <div class="form-check mb-3">
-                <input name="check" id="checkmeout" type="checkbox" class="form-check-input" />
-                <label class="form-check-label" for="checkmeout">Remember me</label>
-              </div>
-              
-              <input type="text" hidden name="action" value="login">
-              <button
-                class="btn btn-primary"
-                type="submit">
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-</body>
+  						<img src="logo.tiff" class="img-thumbnail mb-4" alt="...">
 
+  						<h2>
+  							Bienvenido de nuevo
+  						</h2>
+  						
+  						<form class="mt-5" method="POST" action="AuthController.php">
+							  
+							  <div class="mb-3">
+							    <label for="exampleInputEmail1" class="form-label">
+							    	Correo electrónico
+							    </label>
+							    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="write here" aria-describedby="emailHelp" required name="correo">
+							    
+							    <div id="emailHelp" class="form-text">
+							    	Ingrese su correo electrónico registrado
+							    </div>
+							  </div>
+							  
+							  <div class="mb-3">
+							    <label for="exampleInputPassword1" class="form-label">
+							    	Contraseña
+							    </label>
+							    <input type="password" placeholder="* * * * * " class="form-control" id="exampleInputPassword1" required name="contrasenna">
+							  </div>
+							  
+							  <div class="mb-3 form-check">
+							    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+							    <label class="form-check-label" for="exampleCheck1">
+							    	Mantener la sesión abierta
+							    </label>
+							  </div>
+							  	
+						  	<div class="d-grid gap-2"> 
+							  	<button type="submit" class="btn btn-primary">
+							  		Acceder
+							  	</button>
+							 </div>
+
+							 <input type="hidden" name="action" value="access">
+
+						</form>
+
+  					</div>
+
+  				</div>
+
+  			</div>
+
+  		</div>
+	
+	</div>
+
+    
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
-
