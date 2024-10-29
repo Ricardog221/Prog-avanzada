@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint de 50pesos</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e0f7fa;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: crosshair;
+        }
+        .sidebar button, .sidebar input[type="radio"] {
+            margin: 5px 0;
+        }
+        .sidebar button {
+            padding: 5px;
+            cursor: pointer;
+        }
+        .color-button {
+            width: 24px;
+            height: 24px;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Shapes</h3>
+            <label><input type="radio" name="shape" value="rectangle"> Rectangle</label>
+            <label><input type="radio" name="shape" value="circle"> Circle</label>
+            <label><input type="radio" name="shape" value="triangle"> Triangle</label>
+            <h3>Options</h3>
+            <button onclick="setTool('brush')">Brush</button>
+            <button onclick="setTool('eraser')">Eraser</button>
+            <button onclick="toggleFill()">Fill color</button>
+            <input type="range" id="thickness" min="1" max="10" value="2">
+            <h3>Colors</h3>
+            <button class="color-button" onclick="setColor('red')" style="background-color: red;"></button>
+            <button class="color-button" onclick="setColor('blue')" style="background-color: blue;"></button>
+            <button class="color-button" onclick="setColor('green')" style="background-color: green;"></button>
+            <button class="color-button" onclick="setColor('yellow')" style="background-color: yellow;"></button>
+            <button onclick="clearCanvas()">Clear Canvas</button>
+            <button onclick="saveCanvas()">Save As Image</button>
+        </div>
+        <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        let isDrawing = false;
+        let startX, startY;
+        let color = "black";
+        let lineWidth = 2;
+        let tool = "brush";
+        let fillShape = false;
+        let shape = null;
+        let savedImageData;
+
+        canvas.addEventListener("mousedown", startDrawing);
+        canvas.addEventListener("mouseup", stopDrawing);
+        canvas.addEventListener("mousemove", draw);
+
+        document.getElementById("thickness").addEventListener("input", (e) => lineWidth = e.target.value);
+
+        function startDrawing(e) {
+            startX = e.offsetX;
+            startY = e.offsetY;
+            isDrawing = true;
+            savedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        }
+
+        function stopDrawing(e) {
+            if (!isDrawing) return;
+            isDrawing = false;
+            if (tool === "shape") {
+                drawShape(e.offsetX, e.offsetY);
+            }
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!isDrawing || tool === "shape") return;
+
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+
+            if (tool === "brush") {
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(e.offsetX, e.offsetY);
+            } else if (tool === "eraser") {
+                ctx.strokeStyle = "white";
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(e.offsetX, e.offsetY);
+            } else if (tool === "shape") {
+                ctx.putImageData(savedImageData, 0, 0);
+                drawShape(e.offsetX, e.offsetY, true);
+            }
+        }
+
+        function drawShape(endX, endY, preview = false) {
+            const width = endX - startX;
+            const height = endY - startY;
+
+            ctx.lineWidth = lineWidth;
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+
+            if (shape === "rectangle") {
+                if (fillShape) ctx.fillRect(startX, startY, width, height);
+                else ctx.strokeRect(startX, startY, width, height);
+            } else if (shape === "circle") {
+                const radius = Math.sqrt(width * width + height * height) / 2;
+                ctx.beginPath();
+                ctx.arc(startX + width / 2, startY + height / 2, radius, 0, Math.PI * 2);
+                if (fillShape) ctx.fill();
+                else ctx.stroke();
+            } else if (shape === "triangle") {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(startX + width, endY);
+                ctx.lineTo(startX - width, endY);
+                ctx.closePath();
+                if (fillShape) ctx.fill();
+                else ctx.stroke();
+            }
+
+            if (!preview) ctx.beginPath();
+        }
+
+        function setTool(selectedTool) {
+            tool = selectedTool;
+        }
+
+        function setColor(selectedColor) {
+            color = selectedColor;
+        }
+
+        function toggleFill() {
+            fillShape = !fillShape;
+        }
+
+        document.querySelectorAll("[name='shape']").forEach((el) =>
+            el.addEventListener("change", (e) => {
+                shape = e.target.value;
+                setTool("shape");
+            })
+        );
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveCanvas() {
+            const link = document.createElement("a");
+            link.download = "canvas-image.png";
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>
