@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuck Norris Jokes</title>
+    <script src="https://unpkg.com/vue@3.2.0"></script>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #ffeaa7;
+        }
+        .container {
+            max-width: 500px;
+            text-align: center;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        h1 {
+            font-size: 2em;
+            color: #d63031;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .chuck-image {
+            width: 120px;
+            position: absolute;
+            top: -60px;
+            left: calc(50% - 60px);
+            border-radius: 50%;
+            border: 4px solid #d63031;
+            background: #fff;
+        }
+        .joke {
+            font-size: 1.2em;
+            color: #2d3436;
+            margin-top: 20px;
+            line-height: 1.6;
+            padding: 10px;
+            background: #f7f1e3;
+            border-radius: 8px;
+            animation: fadeIn 0.6s ease;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #e17055;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #d63031;
+            transform: scale(1.1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="container">
+        <img src="https://api.chucknorris.io/img/chucknorris_logo_coloured_small.png" alt="Chuck Norris" class="chuck-image">
+        <h1>Chuck Norris Jokes</h1>
+        <button @click="fetchJoke">😂 Get a New Joke 😂</button>
+        <p v-if="joke" class="joke">{{ joke }}</p>
+    </div>
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+    data() {
+        return {
+            joke: ''  // Aquí se guardan los momos del Chucknorris
+        };
+    },
+    methods: {
+        async fetchJoke() {
+            try {
+                const response = await fetch('https://api.chucknorris.io/jokes/random');
+                const data = await response.json();
+                this.joke = data.value;
+            } catch (error) {
+                console.error("Error fetching joke:", error);
+                this.joke = "Oops! Chuck Norris broke the internet.";
+            }
+        }
+    }
+}).mount('#app');
+</script>
+
+</body>
+</html>
