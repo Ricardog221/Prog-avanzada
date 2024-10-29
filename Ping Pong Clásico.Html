@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PingPong Game</title>
+    <style>
+        canvas {
+            background-color: #2e3b4e;
+            display: block;
+            margin: auto;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #2e3b4e;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="pong" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById("pong");
+        const ctx = canvas.getContext("2d");
+        const paddleWidth = 10, paddleHeight = 100;
+        let player1Y = canvas.height / 2 - paddleHeight / 2;
+        let player2Y = canvas.height / 2 - paddleHeight / 2;
+        let player1Score = 0, player2Score = 0;
+        let ballX = canvas.width / 2, ballY = canvas.height / 2;
+        let ballSpeedX = 5, ballSpeedY = 5;
+        let level = 1;
+        let levelUpTriggered = false; 
+
+        function playSound(type) {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === "bounce") {
+                oscillator.frequency.value = 200;
+            } else if (type === "score") {
+                oscillator.frequency.value = 500; 
+            }
+
+            oscillator.type = "square";
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1); 
+        }
+
+        function drawPaddle(x, y) {
+            ctx.fillStyle = "white";
+            ctx.fillRect(x, y, paddleWidth, paddleHeight);
+        }
+
+        function drawBall() {
+            ctx.fillStyle = "white";
+            ctx.fillRect(ballX, ballY, 10, 10);
+        }
+
+        // Muestra el marcador de ambos jugadores y el nivel actual
+        function drawScore() {
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "white";
+            ctx.fillText(player1Score, canvas.width / 4, 50);
+            ctx.fillText(player2Score, (canvas.width * 3) / 4, 50);
+            ctx.fillText(`Nivel ${level}`, canvas.width / 2 - 40, 30);
+        }
+
+        function drawCenterLine() {
+            ctx.strokeStyle = "white";
+            ctx.setLineDash([5, 15]); 
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]); 
+        }
+
+        function moveBall() {
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            
+            if (ballY <= 0 || ballY + 10 >= canvas.height) {
+                ballSpeedY = -ballSpeedY;
+                playSound("bounce"); 
+            }
+
+            if (ballX <= paddleWidth && ballY >= player1Y && ballY <= player1Y + paddleHeight) {
+                ballSpeedX = -ballSpeedX;
+                playSound("bounce");
+            }
+            if (ballX >= canvas.width - paddleWidth - 10 && ballY >= player2Y && ballY <= player2Y + paddleHeight) {
+                ballSpeedX = -ballSpeedX;
+                playSound("bounce");
+            }
+            if (ballX < 0) {
+                player2Score++;
+                resetBall(); 
+                playSound("score"); 
+                checkLevelUp(); 
+            }
+            if (ballX > canvas.width) {
+                player1Score++;
+                resetBall();
+                playSound("score");
+                checkLevelUp();
+            }
+        }
+
+        function checkLevelUp() {
+            // Cambia de nivel solo la primera vez que un jugador alcanza 10 puntos
+            if (!levelUpTriggered && (player1Score === 10 || player2Score === 10)) {
+                level++; // Aumenta el nivel
+                ballSpeedX *= 1.2; // Incrementa la velocidad de la pelota un 20%
+                ballSpeedY *= 1.2;
+                levelUpTriggered = true; 
+            }
+        }
+        function resetBall() {
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            ballSpeedX = -ballSpeedX;
+        }
+
+        // Control del movimiento de las barras con el teclado
+        document.addEventListener("keydown", (e) => {
+            const key = e.key.toLowerCase();
+            if (key === "w" && player1Y > 0) player1Y -= 20; 
+            if (key === "s" && player1Y < canvas.height - paddleHeight) player1Y += 20; 
+            if (key === "arrowup" && player2Y > 0) player2Y -= 20; 
+            if (key === "arrowdown" && player2Y < canvas.height - paddleHeight) player2Y += 20; 
+        });
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            drawCenterLine(); 
+            drawPaddle(0, player1Y); 
+            drawPaddle(canvas.width - paddleWidth, player2Y);
+            drawBall(); 
+            drawScore(); 
+        }
+
+        // Bucle principal del juego
+        function gameLoop() {
+            draw(); 
+            moveBall(); // Mueve la pelota
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop(); // Inicia el juego
+    </script>
+</body>
+</html>
+
