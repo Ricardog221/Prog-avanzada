@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 Route::get('/operar/{operacion}/{num1}/{num2}', function ($operacion, $num1, $num2) {
     if (!is_numeric($num1) || !is_numeric($num2)) {
@@ -42,4 +43,10 @@ Route::get('/saludo/{nombre}', function ($nombre) {
 
     return view('saludo', ['nombre' => $nombre]);
 });
+// Rutas 
+Route::get('/users', [UserController::class, 'index']); // Listar usuarios
+Route::get('/users/{id}', [UserController::class, 'show']); // Mostrar un usuario específico
+Route::post('/users', [UserController::class, 'store']); // Crear un nuevo usuario
+Route::put('/users/{id}', [UserController::class, 'update']); // Actualizar un usuario existente
+
 
