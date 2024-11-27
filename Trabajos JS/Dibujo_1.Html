@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dibujo_1</title>
+    <style>
+        canvas {
+            border: 2px solid black;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="drawingCanvas" width="800" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let drawing = false; 
+        let lastX = 0; 
+        let lastY = 0; 
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+        });
+
+        canvas.addEventListener('mouseout', () => {
+            drawing = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!drawing) return; 
+            ctx.beginPath(); 
+            ctx.moveTo(lastX, lastY); 
+            ctx.lineTo(e.offsetX, e.offsetY); 
+            ctx.strokeStyle = 'black'; 
+            ctx.lineWidth = 10; 
+            ctx.stroke(); 
+            ctx.closePath();
+
+            [lastX, lastY] = [e.offsetX, e.offsetY]; 
+        });
+    </script>
+</body>
+</html>
